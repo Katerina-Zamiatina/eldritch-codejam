@@ -28,6 +28,8 @@ diffs.forEach((el) =>
   el.addEventListener("click", () => {
     diffs.forEach((level) => {
       level.classList.remove("active-btn");
+      cardFront.classList.add("visually-hidden");
+      cardFront.style.backgroundImage = "";
       el.classList.add("active-btn");
       el.classList.contains("active-btn")
         ? (currentDiff = el.textContent.toLowerCase())
@@ -212,9 +214,58 @@ function createCardsDeck({ firstStage, secondStage, thirdStage }) {
 
 function onCardBackClick() {
   cardFront.classList.remove("visually-hidden");
-  let newArray = [...firstStageCards];
+  let currentCard;
+  let currentCardIdx;
+
+  let newArray = shuffle([
+    ...firstStageCards,
+    ...secondStageCards,
+    ...thirdStageCards,
+  ]);
+  for (let i = 0; i < newArray.length; i += 1) {
+    cardFront.style.backgroundImage = `url("${newArray[i].cardFace}")`;
+    if (`url("${newArray[i].cardFace}")` === cardFront.style.backgroundImage) {
+      currentCardIdx = i;
+      currentCard = newArray[i];
+
+      // newArray.splice(currentCardIdx, 1);
+    }
+    newArray.splice(currentCardIdx, 1)
+  }
+  // newArray = newArray.filter((card) => card === currentCard);
+  
   console.log(newArray);
-  newArray.map((card, i) => {
-    cardFront.style.backgroundImage = `url("${card.cardFace}")`;
-  });
+  countTracker(currentCard);
+}
+
+function countTracker(current) {
+  if (current.color === "green") {
+    firstCounter[0].innerHTML > 0
+      ? firstCounter[0].innerHTML--
+      : secondCounter[0].innerHTML > 0
+      ? secondCounter[0].innerHTML--
+      : thirdCounter[0].innerHTML > 0
+      ? thirdCounter[0].innerHTML--
+      : 0;
+  }
+
+  if (current.color === "brown") {
+    firstCounter[1].innerHTML > 0
+      ? firstCounter[1].innerHTML--
+      : secondCounter[1].innerHTML > 0
+      ? secondCounter[1].innerHTML--
+      : thirdCounter[1].innerHTML > 0
+      ? thirdCounter[1].innerHTML--
+      : 0;
+  }
+
+  if (current.color === "blue") {
+    firstCounter[2].innerHTML > 0
+      ? firstCounter[2].innerHTML--
+      : secondCounter[2].innerHTML > 0
+      ? secondCounter[2].innerHTML--
+      : thirdCounter[2].innerHTML > 0
+      ? thirdCounter[2].innerHTML--
+      : 0;
+  }
 }
